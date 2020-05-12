@@ -6,7 +6,7 @@
   <title>Uoogio</title>
 </head>
 <body>
-  <button onclick="myFunction()">Alert</button>
+  <button onclick="myFunction()">Alert!!</button>
 
 <script>
 function myFunction() {
@@ -20,11 +20,30 @@ sensor.start();
 
 sensor.onreading = () => {
     console.log("Acceleration along X-axis: " + sensor.x);
+    document.getElementById("x").innerHTML = sensor.x;
+
     console.log("Acceleration along Y-axis: " + sensor.y);
+    document.getElementById("y").innerHTML = sensor.y;
     console.log("Acceleration along Z-axis: " + sensor.z);
+    document.getElementById("z").innerHTML = sensor.z;
 }
+
 
 sensor.onerror = event => console.log("errore");
   </script>
+   <h1>Attività</h1>
+   <div class="container" id="accel">
+    <div class="row">
+      <div id="x">
+        
+      </div>
+      <div  id="y">
+        
+      </div>
+      <div  id="z">
+        
+      </div>
+    </div>
+  </div>
 </body>
 </html>
