@@ -14,14 +14,17 @@
 
              
 			 <script>
-			 let sensor = new Accelerometer();
+			 let sensor = new Accelerometer({frequency:1});
              sensor.start();
 			 console.log("Acceleration along X-axis: ");
 
               sensor.onreading = () => {
-                 console.log("Acceleration along X-axis: " + sensor.x);
-                 console.log("Acceleration along Y-axis: " + sensor.y);
-                 console.log("Acceleration along Z-axis: " + sensor.z);
+				console.log("Acceleration along X-axis: " + sensor.x);
+                  $('#x').text(sensor.x);
+                  console.log("Acceleration along Y-axis: " + sensor.y);
+                  $('#y').text(sensor.y);
+                  console.log("Acceleration along Z-axis: " + sensor.z);
+                  $('#z').text(sensor.z);
 				
 			
 				}     
