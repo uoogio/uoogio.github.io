@@ -6,7 +6,7 @@
   <title>Uoogio</title>
 </head>
 <body>
-  <button onclick="myFunction()">Try it</button>
+  <button onclick="myFunction()">Alert</button>
 
 <script>
 function myFunction() {
@@ -24,7 +24,7 @@ sensor.onreading = () => {
     console.log("Acceleration along Z-axis: " + sensor.z);
 }
 
-sensor.onerror = event => alert("non va bene");
+sensor.onerror = event => console.log("errore");
   </script>
 </body>
 </html>
