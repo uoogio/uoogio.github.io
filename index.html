@@ -20,18 +20,18 @@
                  console.log("Acceleration along Y-axis: " + sensor.y);
                  console.log("Acceleration along Z-axis: " + sensor.z);
 				
-				document.getElementById("Acceleration along x").innerHTML = sensor.x;
-				document.getElementById("Acceleration along y").innerHTML = sensor.y;
-				document.getElementById("Acceleration along z").innerHTML = sensor.z;
+				document.getElementById("x").innerHTML = sensor.x;
+				document.getElementById("y").innerHTML = sensor.y;
+				document.getElementById("z").innerHTML = sensor.z;
 				}     
 				
     }
 
               sensor.onerror = event => console.log(event.error.name, event.error.message);
 			</script>		
-			<h2>"x: " <span id="x"></span></h2>
-			<h2>"y: " <span id="y"></span></h2>
-			<h2>"z: " <span id="z"></span></h2>
+			<h2>"x: " <span id="Acceleration along X-axis: "></span></h2>
+			<h2>"y: " <span id="Acceleration along Y-axis: "></span></h2>
+			<h2>"z: " <span id="Acceleration along Z-axis: "></span></h2>
 		<footer>
     		
 		</footer>
