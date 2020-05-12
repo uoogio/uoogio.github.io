@@ -15,7 +15,7 @@
                alert("I am an alert box!");
                }
 			 </script>
-			 
+			 <script>
 			 let sensor = new Accelerometer();
              sensor.start();
 
@@ -23,7 +23,8 @@
                  console.log("Acceleration along X-axis: " + sensor.x);
                  console.log("Acceleration along Y-axis: " + sensor.y);
                  console.log("Acceleration along Z-axis: " + sensor.z);
-}
+				}     
+		    </script>
 
 sensor.onerror = event => console.log(event.error.name, event.error.message);
 		<footer>
