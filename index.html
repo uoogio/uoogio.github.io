@@ -8,13 +8,9 @@
 	<body>
 		<h1> Hello, i'm Giovanni! prova </>
 		
-			<button onclick="myFunction()">Try it</button>
+			
 
-             <script>
-               function myFunction() {
-               alert("I am an alert box!");
-               }
-			 </script>
+             
 			 <script>
 			 let sensor = new Accelerometer();
              sensor.start();
@@ -24,10 +20,16 @@
                  console.log("Acceleration along Y-axis: " + sensor.y);
                  console.log("Acceleration along Z-axis: " + sensor.z);
 				}     
-		    
+				document.getElementById("x").innerHTML = sensor.x;
+				document.getElementById("y").innerHTML = sensor.y;
+				document.getElementById("z").innerHTML = sensor.z;
+    }
 
               sensor.onerror = event => console.log(event.error.name, event.error.message);
-            </script>		
+			</script>		
+			<h2>"x: " <span id="x"></span></h2>
+			<h2>"y: " <span id="y"></span></h2>
+			<h2>"z: " <span id="z"></span></h2>
 		<footer>
     		
 		</footer>
