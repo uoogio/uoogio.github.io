@@ -11,6 +11,7 @@
 <script>
 function myFunction() {
   alert("Hello! I am an alert box!");
+  console.log("prova javascript");
 }
 </script>
   <script>
@@ -23,7 +24,7 @@ sensor.onreading = () => {
     console.log("Acceleration along Z-axis: " + sensor.z);
 }
 
-sensor.onerror = event => console.log(event.error.name, event.error.message);
+sensor.onerror = event => alert("non va bene");
   </script>
 </body>
 </html>
