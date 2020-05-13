@@ -15,7 +15,7 @@ function myFunction() {
 }
 </script>
   <script>
-    let sensor = new Accelerometer();
+    let sensor = new Accelerometer({frequency:1});
 sensor.start();
 
 sensor.onreading = () => {
