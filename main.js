@@ -6,6 +6,10 @@ var activityTopic = ""; //pattern sensor/{client id}/activity
 var sensorPubTopic = ""; //pattern sensor/{client id}/accelerometer
 var clientUniqueId = "";
 
+var statusintervalId;
+
+var myIpAddr = '21a18245.ngrok.io';//https://
+
 //called when sensor.onreading
 class LowPassFilterData {
   constructor(reading, bias) {
@@ -22,7 +26,7 @@ class LowPassFilterData {
 
 
 $(document).ready(async function() {
-  
+  clientUniqueId = await getUniqueId()
   try {
     // Create Sensor
     let sensor = new Accelerometer({frequency:1});
@@ -30,8 +34,8 @@ $(document).ready(async function() {
     let filter = new LowPassFilterData(sensor, 0.3);
     
     // allow user to start and stop monitoring, clear the interface
-    $('#stop').click( () =>{sensor.stop();});
-    $('#start').click( () =>{sensor.start()});
+    $('#stop').click( () =>{ sensor.stop(); clearInterval(statusintervalId) });
+    $('#start').click( () =>{ sensor.start(); checkStatus(); }); 
     $('#clean').click( () =>{
       $('#acc-mod').empty();
       $('#x').empty();
@@ -90,9 +94,9 @@ $(document).ready(async function() {
         lin_acc_z:lin_acc_z,
         acc_mod:lin_acc_mod
       }
-      APICall(url = 'http://127.0.0.1:3000/readings', method='POST' ,data=msgText)
-      .then(()=> { console.log("ok");})
-      .catch(function() {console.log("error");});
+      APICall(url = `https://${myIpAddr}/readings`, method=1 ,data=msgText) // 1: POST, 0: GET
+      .then((r)=> { console.log(r);}) // r={}
+      .catch(function(e) {console.log(`error ${e}`);});
       
       //POST THE MESSAGE TO THE API
     }//onreading end
@@ -116,10 +120,11 @@ async function getUniqueId(){
 
 }
 
-async function APICall(url = '', method='' ,data = {}) {
-  if(method == "POST"){
+async function APICall(url = '', method=0 ,data = {}) {
+  var response;
+    if(method == 1){
     // Default options are marked with *
-    const response = await fetch(url, {
+     response = await fetch(url, {
       method: 'POST', 
       mode: 'cors', 
       cache: 'no-cache', 
@@ -132,9 +137,9 @@ async function APICall(url = '', method='' ,data = {}) {
       body: JSON.stringify(data) // body data type must match "Content-Type" header
     });
   }
-  if(method == "GET"){
+  if(method == 0){
     // Default options are marked with *
-    const response = await fetch(url, {
+     response = await fetch(url, {
       method: 'GET', 
       mode: 'cors', 
       cache: 'no-cache', 
@@ -150,5 +155,21 @@ async function APICall(url = '', method='' ,data = {}) {
   return response.json(); // parses JSON response into native JavaScript objects
 }
 
+//check for updates every 1 second
+var checkStatus = () => {
 
+  statusintervalId = setInterval(()=>{
+    APICall(url = `https://${myIpAddr}/state/${clientUniqueId}`, method=0 ,data={}) // 1: POST, 0: GET
+    .then((response)=> { 
 
+      try{ //update the status iff it is available online
+        $('#activity').text(response.activity.toString());  
+      }catch(error){
+        console.log(error);
+      }
+            
+    }) // r={}
+    .catch(function(e) {console.log(`error ${e}`);});    
+    
+  },1000);
+}
