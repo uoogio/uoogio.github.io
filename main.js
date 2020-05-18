@@ -7,8 +7,8 @@ var sensorPubTopic = ""; //pattern sensor/{client id}/accelerometer
 var clientUniqueId = "";
 
 var statusintervalId;
-
-var myIpAddr = '21a18245.ngrok.io';//https://
+//http://bd91c26f.ngrok.io
+var myIpAddr = 'bd91c26f.ngrok.io';//https://
 
 //called when sensor.onreading
 class LowPassFilterData {
