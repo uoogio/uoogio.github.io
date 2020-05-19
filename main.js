@@ -9,7 +9,7 @@ var clientUniqueId = "";
 var statusintervalId;
 //http://bd91c26f.ngrok.io
 //http://ef3acea5.ngrok.io
-var myIpAddr = '779ad5ac.ngrok.io ';//https://
+var myIpAddr = '779ad5ac.ngrok.io';//https://
 
 //called when sensor.onreading
 class LowPassFilterData {
