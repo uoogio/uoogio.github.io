@@ -100,6 +100,8 @@ $(document).ready(async function() {
       .catch(function(e) {console.log(`error ${e}`);});
       
       aEdge = classificator(msgText);
+      
+      $('#activity').text(aEdge);
 
       //POST THE MESSAGE TO THE API
     }//onreading end
