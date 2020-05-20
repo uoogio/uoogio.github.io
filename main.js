@@ -99,6 +99,8 @@ $(document).ready(async function() {
       .then((r)=> { console.log(r);}) // r={}
       .catch(function(e) {console.log(`error ${e}`);});
       
+      aEdge = classificator(msgText);
+
       //POST THE MESSAGE TO THE API
     }//onreading end
 
@@ -173,4 +175,14 @@ var checkStatus = () => {
     .catch(function(e) {console.log(`error ${e}`);});    
     
   },1000);
+}
+
+function classificator(data){
+  if(data.acc_mod >= 0.5){
+    $('#activity').text("You are moving");  
+    return "You are moving";
+  }else{
+    $('#activity').text("you are still");  
+    return "you are still";
+  }
 }
