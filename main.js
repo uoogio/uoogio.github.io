@@ -1,17 +1,16 @@
-let alert = '<div class="alert alert-warning" role="alert">'+
-  'Seems like if your device/browser do not support accelerometer. Try to change device/browser.'+
+let alert = '<div class="alert alert-warning" role="alert">' +
+  'Seems like if your device/browser do not support accelerometer. Try to change device/browser.' +
   '</div>';
 
 var activityTopic = ""; //pattern sensor/{client id}/activity
 var sensorPubTopic = ""; //pattern sensor/{client id}/accelerometer
 var clientUniqueId = "";
 
-var flagEdge = false;
+var flagEdge = true;
 
 
 var statusintervalId;
-//http://bd91c26f.ngrok.io
-//http://ef3acea5.ngrok.io
+
 var myIpAddr = '06332fe1.ngrok.io';//https://
 
 //called when sensor.onreading
@@ -29,18 +28,18 @@ class LowPassFilterData {
 }
 
 
-$(document).ready(async function() {
+$(document).ready(async function () {
   clientUniqueId = await getUniqueId()
   try {
     // Create Sensor
-    let sensor = new Accelerometer({frequency:1});
+    let sensor = new Accelerometer({ frequency: 1 });
     sensor.onerror = event => console.log(event.error.name, event.error.message);
     let filter = new LowPassFilterData(sensor, 0.3);
-    
+
     // allow user to start and stop monitoring, clear the interface
-    $('#stop').click( () =>{ sensor.stop(); clearInterval(statusintervalId) });
-    $('#start').click( () =>{ sensor.start(); checkStatus(); }); 
-    $('#clean').click( () =>{
+    $('#stop').click(() => { sensor.stop(); clearInterval(statusintervalId) });
+    $('#start').click(() => { sensor.start(); checkStatus(); });
+    $('#clean').click(() => {
       $('#acc-mod').empty();
       $('#x').empty();
       $('#y').empty();
@@ -54,19 +53,19 @@ $(document).ready(async function() {
       $('#y-f').empty();
       $('#z-f').empty();
     });
-    
+
     sensor.onreading = () => {
-        
+
       /*
         READ AND FILER SENSORS
       */
       // Pass latest values through filter.
       filter.update(sensor);
       //isolate lin acc 
-      lin_acc_x = sensor.x-filter.x;
-      lin_acc_y = sensor.y-filter.y;
-      lin_acc_z = sensor.z-filter.z;
-      lin_acc_mod = Math.sqrt( Math.pow(lin_acc_x,2) + Math.pow(lin_acc_y,2) + Math.pow(lin_acc_z,2) ); //compute linear acc module
+      lin_acc_x = sensor.x - filter.x;
+      lin_acc_y = sensor.y - filter.y;
+      lin_acc_z = sensor.z - filter.z;
+      lin_acc_mod = Math.sqrt(Math.pow(lin_acc_x, 2) + Math.pow(lin_acc_y, 2) + Math.pow(lin_acc_z, 2)); //compute linear acc module
 
       /*
         DISPLAY DATA ON HTML PAGE
@@ -87,85 +86,106 @@ $(document).ready(async function() {
       /* 
         SEND THE DATA
       */
-     //create a message
-      msgText= {
-        clientId:clientUniqueId,
-        x:sensor.x,
-        y:sensor.y,
-        z:sensor.z,
-        lin_acc_x:lin_acc_x,
-        lin_acc_y:lin_acc_y,
-        lin_acc_z:lin_acc_z,
-        acc_mod:lin_acc_mod
+      //create a message
+      msgText = {
+        clientId: clientUniqueId,
+        x: sensor.x,
+        y: sensor.y,
+        z: sensor.z,
+        lin_acc_x: lin_acc_x,
+        lin_acc_y: lin_acc_y,
+        lin_acc_z: lin_acc_z,
+        acc_mod: lin_acc_mod
       }
 
-      if(!flagEdge){
-       APICall(url = `http://192.168.1.80:5000/postdata`, method=1 ,data=msgText) // 1: POST, 0: GET
-      .then((r)=> { console.log(r);}) // r={}
-      .catch(function(e) {console.log(`error ${e}`);});
-      
-    
-    }else{
-     
-     
-      aEdge = classificator(msgText);
-      
-      $('#activity').text(aEdge);
-      APICall(url = `https://${myIpAddr}/state/${clientUniqueId}`, method=1 ,data={activity:aEdge}) // 1: POST, 0: GET
+      if (!flagEdge) {
+        /*APICall(url = `https://${myIpAddr}/readings`, method=1 ,data=msgText) // 1: POST, 0: GET
         .then((r)=> { console.log(r);}) // r={}
         .catch(function(e) {console.log(`error ${e}`);});
+        */
+        // POST
+        // POST
+        fetch('/hello', {
+
+          // Specify the method
+          method: 'POST',
+
+          // A JSON payload
+          body: JSON.stringify({
+            "greeting": "Hello from the browser!"
+          })
+        }).then(function (response) { // At this point, Flask has printed our JSON
+          return response.text();
+        }).then(function (text) {
+
+          console.log('POST response: ');
+
+          // Should be 'OK' if everything was successful
+          console.log(text);
+        });
+
+
+      } else {
+
+
+        aEdge = classificator(msgText);
+
+        $('#activity').text(aEdge);
+        APICall(url = `https://${myIpAddr}/state/${clientUniqueId}`, method = 1, data = { activity: aEdge }) // 1: POST, 0: GET
+          .then((r) => { console.log(r); }) // r={}
+          .catch(function (e) { console.log(`error ${e}`); });
       }
       //POST THE MESSAGE TO THE API
     }//onreading end
 
-  } catch(error) {
-      console.log('Error creating sensor:')
-      console.log(error);
-      $('body').append($.parseHTML(alert));
+  } catch (error) {
+    console.log('Error creating sensor:')
+    console.log(error);
+    $('body').append($.parseHTML(alert));
   }
-    
+
 
 });
 
 //called on initializaiton to get a unique id and retrive only classification associated to my id
-async function getUniqueId(){
+async function getUniqueId() {
 
-  const msgUint8 = new TextEncoder().encode(new Date().toLocaleString()+Math.random().toString());                           // encode as (utf-8) Uint8Array
+  const msgUint8 = new TextEncoder().encode(new Date().toLocaleString() + Math.random().toString());                           // encode as (utf-8) Uint8Array
   const hashBuffer = await crypto.subtle.digest('SHA-1', msgUint8);           // hash the message
   const hashArray = Array.from(new Uint8Array(hashBuffer));                     // convert buffer to byte array
   return hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
 }
 
-async function APICall(url = '', method=0 ,data = {}) {
+async function APICall(url = '', method = 0, data = {}) {
   var response;
-    if(method == 1){
+  if (method == 1) {
     // Default options are marked with *
-     response = await fetch(url, {
-      method: 'POST', 
-      mode: 'cors', 
-      cache: 'no-cache', 
-      credentials: 'same-origin', 
+    response = await fetch(url, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json'
-        },
+      },
       redirect: 'follow',
-      referrerPolicy: 'no-referrer', 
+      referrerPolicy: 'no-referrer',
       body: JSON.stringify(data) // body data type must match "Content-Type" header
     });
   }
-  if(method == 0){
+  if (method == 0) {
     // Default options are marked with *
-     response = await fetch(url, {
-      method: 'GET', 
-      mode: 'cors', 
-      cache: 'no-cache', 
-      credentials: 'same-origin', 
+    response = await fetch(url, {
+      method: 'GET',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json'
-        },
+      },
       redirect: 'follow',
-      referrerPolicy: 'no-referrer', 
+      referrerPolicy: 'no-referrer',
       //no body since it is a get
     });
   }
@@ -175,28 +195,28 @@ async function APICall(url = '', method=0 ,data = {}) {
 //check for updates every 1 second
 var checkStatus = () => {
 
-  statusintervalId = setInterval(()=>{
-    APICall(url = `https://${myIpAddr}/state/${clientUniqueId}`, method=0 ,data={}) // 1: POST, 0: GET
-    .then((response)=> { 
+  statusintervalId = setInterval(() => {
+    APICall(url = `https://${myIpAddr}/state/${clientUniqueId}`, method = 0, data = {}) // 1: POST, 0: GET
+      .then((response) => {
 
-      try{ //update the status iff it is available online
-        $('#activity').text(response.activity.toString());  
-      }catch(error){
-        console.log(error);
-      }
-            
-    }) // r={}
-    .catch(function(e) {console.log(`error ${e}`);});    
-    
-  },1000);
+        try { //update the status iff it is available online
+          $('#activity').text(response.activity.toString());
+        } catch (error) {
+          console.log(error);
+        }
+
+      }) // r={}
+      .catch(function (e) { console.log(`error ${e}`); });
+
+  }, 1000);
 }
 
-function classificator(data){
-  if(data.acc_mod >= 0.5){
-    $('#activity').text("You are moving");  
+function classificator(data) {
+  if (data.acc_mod >= 0.5) {
+    $('#activity').text("You are moving");
     return "You are moving";
-  }else{
-    $('#activity').text("you are still");  
+  } else {
+    $('#activity').text("you are still");
     return "you are still";
   }
 }
