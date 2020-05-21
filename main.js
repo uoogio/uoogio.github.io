@@ -29,7 +29,7 @@ class LowPassFilterData {
 
 $( "#target" ).click(function() {
   flagEdge=!flagEdge
-  alert( "Handler for .click() called." );
+  console.log(flagEdge)
 });
 
 $(document).ready(async function () {
