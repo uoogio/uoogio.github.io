@@ -29,7 +29,7 @@ class LowPassFilterData {
 
 $( "#target" ).click(function() {
   flagEdge=!flagEdge
-  console.log(flagEdge)
+  
 });
 
 $(document).ready(async function () {
@@ -103,18 +103,18 @@ $(document).ready(async function () {
       }
 
       if (!flagEdge) {
-        /*APICall(url = `https://${myIpAddr}/readings`, method=1 ,data=msgText) // 1: POST, 0: GET
+        APICall(url = `https://${myIpAddr}/readings`, method=1 ,data=msgText) // 1: POST, 0: GET
         .then((r)=> { console.log(r);}) // r={}
         .catch(function(e) {console.log(`error ${e}`);});
-        */
+        
         // POST
         
-        console.log("debug");
+        /*console.log("debug");
         
         postData('http://192.168.1.80:5000/hello', data=msgText )
         .then(data => {
           console.log(data); // JSON data parsed by `response.json()` call
-        });
+        });*/
 
 
       } else {
