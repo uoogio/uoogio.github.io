@@ -105,7 +105,7 @@ $(document).ready(async function () {
         */
         // POST
         // POST
-        fetch('/hello', {
+        fetch('http://192.168.1.80:5000/hello', {
 
           // Specify the method
           method: 'POST',
