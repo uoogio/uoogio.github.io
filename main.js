@@ -6,10 +6,13 @@ var activityTopic = ""; //pattern sensor/{client id}/activity
 var sensorPubTopic = ""; //pattern sensor/{client id}/accelerometer
 var clientUniqueId = "";
 
+var flagEdge = true;
+
+
 var statusintervalId;
 //http://bd91c26f.ngrok.io
 //http://ef3acea5.ngrok.io
-var myIpAddr = 'c93318d6.ngrok.io';//https://
+var myIpAddr = '06332fe1.ngrok.io';//https://
 
 //called when sensor.onreading
 class LowPassFilterData {
@@ -95,14 +98,23 @@ $(document).ready(async function() {
         lin_acc_z:lin_acc_z,
         acc_mod:lin_acc_mod
       }
+
+      if(!flagEdge){
       APICall(url = `https://${myIpAddr}/readings`, method=1 ,data=msgText) // 1: POST, 0: GET
       .then((r)=> { console.log(r);}) // r={}
       .catch(function(e) {console.log(`error ${e}`);});
       
+    
+    }else{
+     
+     
       aEdge = classificator(msgText);
       
       $('#activity').text(aEdge);
-
+      APICall(url = `https://${myIpAddr}/state/${clientUniqueId}`, method=1 ,data={activity:aEdge}) // 1: POST, 0: GET
+        .then((r)=> { console.log(r);}) // r={}
+        .catch(function(e) {console.log(`error ${e}`);});
+      }
       //POST THE MESSAGE TO THE API
     }//onreading end
 
