@@ -6,7 +6,7 @@ var activityTopic = ""; //pattern sensor/{client id}/activity
 var sensorPubTopic = ""; //pattern sensor/{client id}/accelerometer
 var clientUniqueId = "";
 
-var flagEdge = true;
+var flagEdge = false;
 
 
 var statusintervalId;
