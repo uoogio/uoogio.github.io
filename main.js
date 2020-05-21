@@ -6,7 +6,7 @@ var activityTopic = ""; //pattern sensor/{client id}/activity
 var sensorPubTopic = ""; //pattern sensor/{client id}/accelerometer
 var clientUniqueId = "";
 
-var flagEdge = true;
+var flagEdge = false;
 
 
 var statusintervalId;
@@ -100,7 +100,7 @@ $(document).ready(async function() {
       }
 
       if(!flagEdge){
-      APICall(url = `https://${myIpAddr}/readings`, method=1 ,data=msgText) // 1: POST, 0: GET
+       APICall(url = `http://yourflaskserverIPorURL:port/postdata`, method=1 ,data=msgText) // 1: POST, 0: GET
       .then((r)=> { console.log(r);}) // r={}
       .catch(function(e) {console.log(`error ${e}`);});
       
