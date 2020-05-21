@@ -105,32 +105,11 @@ $(document).ready(async function () {
         */
         // POST
         // POST
-        fetch('http://192.168.1.80:5000/hello', {
-
-          // Specify the method
-          method: 'POST',
-          mode: 'cors',
-          cache: 'no-cache',
-          credentials: 'same-origin',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          redirect: 'follow',
-          referrerPolicy: 'no-referrer',
-          //body: JSON.stringify(data)
-
-          // A JSON payload
-          body: JSON.stringify({
-            greeting: "Hello from the browser!"
-          })
-        }).then(function (response) { // At this point, Flask has printed our JSON
-          return response.text();
-        }).then(function (text) {
-
-          console.log('POST response: ');
-
-          // Should be 'OK' if everything was successful
-          console.log(text);
+        console.log("debug");
+        
+        postData('http://192.168.1.80:5000/hello', { answer: 42 })
+        .then(data => {
+          console.log(data); // JSON data parsed by `response.json()` call
         });
 
 
@@ -165,7 +144,23 @@ async function getUniqueId() {
   return hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
 }
-
+async function postData(url = '', data = {}) {
+  // Default options are marked with *
+  const response = await fetch(url, {
+    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    mode: 'cors', // no-cors, *cors, same-origin
+    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: 'same-origin', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json'
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    redirect: 'follow', // manual, *follow, error
+    referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    body: JSON.stringify(data) // body data type must match "Content-Type" header
+  });
+  return response.json(); // parses JSON response into native JavaScript objects
+}
 async function APICall(url = '', method = 0, data = {}) {
   var response;
   if (method == 1) {
