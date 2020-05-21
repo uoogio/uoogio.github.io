@@ -6,7 +6,7 @@ var activityTopic = ""; //pattern sensor/{client id}/activity
 var sensorPubTopic = ""; //pattern sensor/{client id}/accelerometer
 var clientUniqueId = "";
 
-var flagEdge = false;
+var flagEdge = true;
 
 
 var statusintervalId;
@@ -27,6 +27,10 @@ class LowPassFilterData {
   }
 }
 
+$( "#target" ).click(function() {
+  flagEdge=!flagEdge
+  alert( "Handler for .click() called." );
+});
 
 $(document).ready(async function () {
   clientUniqueId = await getUniqueId()
@@ -104,10 +108,10 @@ $(document).ready(async function () {
         .catch(function(e) {console.log(`error ${e}`);});
         */
         // POST
-        // POST
+        
         console.log("debug");
         
-        postData('http://192.168.1.80:5000/hello', { answer: 42 })
+        postData('http://192.168.1.80:5000/hello', data=msgText )
         .then(data => {
           console.log(data); // JSON data parsed by `response.json()` call
         });
