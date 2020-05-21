@@ -121,7 +121,7 @@ $(document).ready(async function () {
 
           // A JSON payload
           body: JSON.stringify({
-            "greeting": "Hello from the browser!"
+            greeting: "Hello from the browser!"
           })
         }).then(function (response) { // At this point, Flask has printed our JSON
           return response.text();
