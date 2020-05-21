@@ -100,7 +100,7 @@ $(document).ready(async function() {
       }
 
       if(!flagEdge){
-       APICall(url = `http://yourflaskserverIPorURL:port/postdata`, method=1 ,data=msgText) // 1: POST, 0: GET
+       APICall(url = `http://192.168.1.80:5000/postdata`, method=1 ,data=msgText) // 1: POST, 0: GET
       .then((r)=> { console.log(r);}) // r={}
       .catch(function(e) {console.log(`error ${e}`);});
       
