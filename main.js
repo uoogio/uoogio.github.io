@@ -11,7 +11,7 @@ var flagEdge = true;
 
 var statusintervalId;
 
-var myIpAddr = '2354a599.ngrok.io';//https://
+var myIpAddr = '1a078109.ngrok.io';//https://
 
 //called when sensor.onreading
 class LowPassFilterData {
